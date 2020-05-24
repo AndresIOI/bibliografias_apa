@@ -1,0 +1,174 @@
+html {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background: #0f4c81;
+}
+
+.titulo {
+    font-size: 35px;
+}
+
+.btn-danger {
+    opacity: .6;
+    transition: .5s;
+}
+.btn-danger:hover {
+    color: white;
+    opacity: 1 !important;
+}
+.btn-copy {
+    opacity: 1;
+    color: white;
+    background-color: #35495e;
+    transition: .3s;
+}
+.btn-copy:hover{
+    color:white;
+}
+.main {
+    margin-top: 25px;
+    color: white;
+}
+.citas {
+    margin-top: 50px;
+}
+.cita {
+    margin: 10px 0;
+    padding: 20px 20px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.cita p {
+    color: black;
+}
+.opciones-citas{
+    margin-top: 50px;
+}
+
+.btn-cita{
+    opacity: .6;
+    margin-top: 20px;
+    color: black;
+    background: white;
+    width: 100%;
+    transition: .3s;
+    border-radius: 0px;
+}
+.btn-cita:hover{
+    opacity: 1;
+}
+.form-citar {
+    width: 100%;
+    margin: 10px 0;
+    padding: 20px 20px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    color : black;
+}
+
+.main-form {
+    min-height: 100vh;
+}
+.btn-apa{
+    font-size: 1rem;
+line-height: 1.5;
+font-weight: 400;
+    padding: .375rem .75rem;
+    margin-top: 20px;
+    color: white;
+    background: #035aa6;
+    width: 100%;
+    transition: .3s;
+    border-radius: 0px;
+    border: 1px solid transparent;
+}
+.btn-disabled {
+    opacity: .6;
+}
+.title-citar{
+    margin-bottom: 25px;
+}
+
+.btn-regresar{
+    margin-top: 20px;
+    color: black;
+    width: 100%;
+    transition: .3s;
+    border-radius: 0px;
+}
+.titulo-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+textarea {
+    resize: none;
+}
+
+.requerido {
+    color: gray;
+}
+.requerido-error {
+    color: red;
+}
+
+.btn-limpiar{
+    font-size: 1rem;
+line-height: 1.5;
+font-weight: 400;
+    padding: .375rem .75rem;
+    margin-top: 20px;
+    color: black;
+    background: #e4e4e4;
+    width: 100%;
+    transition: .3s;
+    border-radius: 0px;
+    border: 1px solid transparent;
+}
+.parrafo-bibliografia {
+    padding: 25px 25px;
+    border: 1px solid transparent;
+    background-color: #ffe277;
+    border-radius: 5px;
+}
+.p-b{
+    width:100%; 
+    border:none; 
+    background-color:#ffe277;
+}
+.p-b:focus{
+    outline: none;
+}
+.p-b::-moz-selection{
+    background-color: transparent;
+}
+.p-b::selection{
+    background-color: transparent;
+}
+
+.cita input {
+    width:100%; 
+    border:none; 
+    background-color: white;
+    margin-bottom: 15px;
+}
+.cita input:focus{
+    outline: none;
+}
+.cita input::-moz-selection{
+    background-color: transparent;
+}
+.cita input::selection{
+    background-color: transparent;
+}
+.check-autor{
+    padding-left: 15px;
+    margin-bottom: 15px;
+}
+.institucion-input {
+    display: none;
+}
