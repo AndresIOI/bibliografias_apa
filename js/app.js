@@ -15,6 +15,7 @@ function isBotonApaDisabled(bool) {
 
 function limpiarFormulario(e) {
   e.preventDefault();
+  
   formGenerarCitaLibro.reset();
   removerEstilosInput(nombreAutor);
   removerEstilosInput(apellidosAutor);
@@ -26,10 +27,10 @@ function limpiarFormulario(e) {
   if (document.querySelector(".bibliografia"))
     document.querySelector(".bibliografia").remove();
 
-  if (botonApa.disabled === false) {
+  /*if (botonApa.disabled === false) {
     botonApa.disabled = true;
     botonApa.classList.add("btn-disabled");
-  }
+  }*/
 }
 
 function validarLongitud(campo) {

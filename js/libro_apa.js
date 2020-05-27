@@ -14,37 +14,88 @@ const btnAgregarAutor = document.querySelector('#btn-agregar-autor');
 const divFormAutor = document.querySelector('.autores');
 
 document.addEventListener("DOMContentLoaded", () => {
-  isBotonApaDisabled(true);
+  isBotonApaDisabled(false);
 });
 
-nombreAutor.addEventListener("blur", validarCampo);
-apellidosAutor.addEventListener("blur", validarCampo);
-tituloLibro.addEventListener("blur", validarCampo);
-lugarLibro.addEventListener("blur", validarCampo);
-anioLibro.addEventListener("blur", validarCampo);
-divFormAutor.addEventListener('click',isInstitucion);
-btnAgregarAutor.addEventListener('click', agregarAutor);
-formGenerarCitaLibro.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let textoBibliografia = "";
-  isBibliografia();
-  const nombreAutorArray = nombreAutor.value.split(" ");
-  eliminarEspacio(nombreAutorArray);
 
-  let inicialesNombre = "";
-  nombreAutorArray.forEach((nombre) => {
-    inicialesNombre += nombre.slice(0, 1) + ".";
-  });
-  const textoAnio = `(${anioLibro.value}).`;
-  textoBibliografia = `${apellidosAutor.value}, ${inicialesNombre} ${textoAnio} ${tituloLibro.value}. (${edicionLibro.value}ª ed.) ${lugarLibro.value} : ${editorialLibro.value}`;
+/*tituloLibro.addEventListener("blur", validarCampo);
+lugarLibro.addEventListener("blur", validarCampo);
+anioLibro.addEventListener("blur", validarCampo);*/
+
+divFormAutor.addEventListener('click', e => {
+
+
+  if (e.target.classList.contains('form-check-input')) {
+    isInstitucion(e);
+  } else if (e.target.classList.contains('borrar-autor')) {
+    eliminarAutor(e);
+  } else if (e.target.classList.contains('nombre-autor-input') || e.target.classList.contains('apellido-autor-input') || e.target.classList.contains('institucion')) {
+    // e.target.addEventListener('blur', validarCampo);
+
+  }
+});
+btnAgregarAutor.addEventListener('click', agregarAutor);
+
+botonLimpiar.addEventListener('click', limpiarFormulario);
+
+formGenerarCitaLibro.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const autores = document.querySelectorAll('.nombre-autor-input');
+  const apellidosAutores = document.querySelectorAll('.apellido-autor-input');
+  const instituciones = document.querySelectorAll('.institucion');
+  const autoresArray = [];
+  const institucionesArray = [];
+  let textoBibliografia = "";
+  let textoAutores = "";
+  let textoInstituciones = "";
+
+
+  if (autores.length > 0) {
+    autores.forEach((autor, index) => {
+      let inicialesNombre = "";
+      const nombreArray = autor.value.split(" ");
+      eliminarEspacio(nombreArray);
+      nombreArray.forEach((nombre) => {
+        inicialesNombre += nombre.slice(0, 1) + ".";
+      });
+      autoresArray.push(apellidosAutores[index].value + ", " + inicialesNombre);
+    });
+    textoAutores = `${autoresArray.map(autor => { return `${autor}` }).join(', ')}`;
+  }
+
+  if (instituciones.length > 0) {
+    instituciones.forEach(institucion => {
+      institucionesArray.push(institucion.value);
+    });
+    textoInstituciones = `${institucionesArray.map(institucion => { return `${institucion}` }).join(', ')}`;
+  }
+  if(textoInstituciones !== '' && textoAutores !== ''){
+    textoBibliografia +=  textoAutores + ", " +  textoInstituciones;
+  }else if(textoInstituciones === '') {
+    textoBibliografia += textoAutores;
+  } else{
+    textoBibliografia += textoInstituciones
+  }
+  
+  textoBibliografia += ` (${anioLibro.value}). `;
+  textoBibliografia += tituloLibro.value;
+  textoBibliografia += edicionLibro.value !== '' ? ` (${edicionLibro.value}ª ed.). ` : '';
+  textoBibliografia += lugarLibro.value;
+  textoBibliografia += editorialLibro.value !== '' ? ` : ${editorialLibro.value}` : '';
+
+  isBibliografia();
   mostrarBibliografia(textoBibliografia);
   agregarBibliografiaLocalStorage(textoBibliografia);
 });
+
+
+
 function validarCampo() {
   validarLongitud(this);
   if (
-    nombreAutor.value != "" &&
-    apellidosAutor.value != "" &&
+    (nombreAutor.value != "" &&
+      apellidosAutor.value != "") ||
     tituloLibro.value != "" &&
     lugarLibro.value != "" &&
     anioLibro.value != ""
@@ -55,35 +106,74 @@ function validarCampo() {
   }
 }
 
-function isInstitucion(e){
+function isInstitucion(e) {
+  let html = " ";
+  if (e.target.checked) {
+    html = `                
+    <div class="col-10 institucion-input">
+      <div class="form-group">
+        <label for="">Institucion <span class="requerido">*</span></label>
+        <input type="text" class="form-control institucion" />
+      </div>
+    </div>
+  `;
 
-  if(e.target.classList.contains('form-check-input')){
-        
-    if(e.target.checked){
-      e.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[1].style.display = "none";      
-      e.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].style.display = "none";      
-      e.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[5].style.display = "block";      
+    const domHmtl = document.createRange().createContextualFragment(html);
+    e.target.parentNode.parentNode.parentNode.childNodes[1].children[0].remove();
+    e.target.parentNode.parentNode.parentNode.childNodes[1].children[0].remove();
+    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.childNodes[1], e.target.parentNode.parentNode.parentNode.childNodes[1].children[0]);
 
-    }else {
-      e.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[1].style.display = "block";      
-      e.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].style.display = "block";      
-      e.target.parentNode.parentNode.parentNode.childNodes[1].childNodes[5].style.display = "none";  
-    }
+
+  } else {
+    html = `
+      <div class="col-6 autor-nombre-input">
+        <div class="form-group">
+          <label for="">Nombre(s) del Autor
+          <span class="requerido">*</span></label>
+          <input type="text" class="form-control nombre-autor-input" id="nombres-autor" />
+        </div>
+      </div>
+      <div class="col-4 autor-apellido-input">
+        <div class="form-group">
+          <label for="">Apellido Autor <span class="requerido">*</span></label>
+          <input type="text" class="form-control apellido-autor-input" id="apellidos-autor" />
+        </div>
+      </div>
+      `;
+
+    const domHmtl = document.createRange().createContextualFragment(html);
+    e.target.parentNode.parentNode.parentNode.childNodes[1].children[0].remove();
+    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.childNodes[1], e.target.parentNode.parentNode.parentNode.childNodes[1].children[0]);
+    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.childNodes[2], e.target.parentNode.parentNode.parentNode.childNodes[1].children[1]);
+
+
+
+
   }
-
-
-
 }
 
-function agregarAutor(e){
+function agregarAutor(e) {
   e.preventDefault();
   const autores = document.querySelector('.autores');
   const autor = document.querySelector('.autor');
+  const autorClone = autor.cloneNode('.autor');
+  const div = document.createElement('div');
+  const button = document.createElement('a');
 
-  
-  
-    
-  autores.appendChild(autor.cloneNode('.autor'));
-  
-  
+  button.classList.add('btn');
+  button.classList.add('btn-danger');
+  button.classList.add('borrar-autor');
+  button.style.marginTop = "30px";
+  button.innerText = "X";
+  div.classList.add('col-2');
+  div.appendChild(button)
+
+  autorClone.childNodes[1].insertBefore(div, autorClone.childNodes[1].childNodes[7]);
+
+  autores.appendChild(autorClone);
+
+}
+
+function eliminarAutor(e) {
+  e.target.parentNode.parentNode.parentNode.remove();
 }

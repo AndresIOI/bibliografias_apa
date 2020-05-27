@@ -28,28 +28,24 @@
         <form id="form-libro">
           <div class="autores">
             <div class="autor">
-              <div class="row">
+              <div class="row row-autor">
                   <div class="col-6 autor-nombre-input">
                     <div class="form-group">
                       <label for="">Nombre(s) del Autor
                         <span class="requerido">*</span></label>
-                      <input type="text" class="form-control" id="nombres-autor" />
+                      <input type="text" class="form-control nombre-autor-input" id="nombres-autor" />
                     </div>
                   </div>
                   <div class="col-4 autor-apellido-input">
                     <div class="form-group">
                       <label for="">Apellido Autor <span class="requerido">*</span></label>
-                      <input type="text" class="form-control" id="apellidos-autor" />
+                      <input type="text" class="form-control apellido-autor-input" id="apellidos-autor" />
                     </div>
                   </div>
-                <div class="col-10 institucion-input">
-                  <div class="form-group">
-                    <label for="">Institucion</label>
-                    <input type="text" class="form-control" />
-                  </div>
-                </div>
+
+                <div class="button"></div>
               </div>
-              <div class="row">
+              <div class="row isInstitucion">
                 <div class="form-check form-check-inline check-autor">
                   <input class="form-check-input" type="checkbox" name="autorOption" id="institucion" />
                   <label for="institucions" class="form-check-label">Institucion</label>
@@ -100,7 +96,7 @@
               </button>
             </div>
             <div class="col-2">
-              <button href="" class="btn-limpiar">Limpiar</button>
+              <button href="#" class="btn-limpiar">Limpiar</button>
             </div>
           </div>
         </form>
