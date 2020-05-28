@@ -14,23 +14,46 @@ function isBotonApaDisabled(bool) {
 }
 
 function limpiarFormulario(e) {
-  e.preventDefault();
   
+  e.preventDefault();
   formGenerarCitaLibro.reset();
-  removerEstilosInput(nombreAutor);
-  removerEstilosInput(apellidosAutor);
+  const nombreAutor = document.querySelector("#nombres-autor");
+  const apellidosAutor = document.querySelector("#apellidos-autor");
+  const tituloLibro = document.querySelector("#titulo-libro");
+  const lugarLibro = document.querySelector("#lugar-libro");
+  const anioLibro = document.querySelector("#anio-libro");
+
+  const institucion = document.querySelector('.institucion-input');
+
+  if (institucion) {
+    document.querySelector('.form-check-input').checked = true;
+    removerEstilosInput(institucion.children[0].children[1]);    
+  }else{
+    removerEstilosInput(nombreAutor);
+    removerEstilosInput(apellidosAutor);
+  }
+  while (e.target.parentElement.parentElement.parentElement.children[0].children.length > 1) {
+    i = 1;
+    e.target.parentElement.parentElement.parentElement.children[0].children[i].remove();
+    i++;
+  }
+
+
+
   removerEstilosInput(tituloLibro);
   removerEstilosInput(lugarLibro);
   removerEstilosInput(anioLibro);
   removerEstilosInput(botonLimpiar);
+  
+
 
   if (document.querySelector(".bibliografia"))
     document.querySelector(".bibliografia").remove();
 
-  /*if (botonApa.disabled === false) {
+  if (botonApa.disabled === false) {
     botonApa.disabled = true;
     botonApa.classList.add("btn-disabled");
-  }*/
+  }
 }
 
 function validarLongitud(campo) {

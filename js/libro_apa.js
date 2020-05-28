@@ -14,13 +14,14 @@ const btnAgregarAutor = document.querySelector('#btn-agregar-autor');
 const divFormAutor = document.querySelector('.autores');
 
 document.addEventListener("DOMContentLoaded", () => {
-  isBotonApaDisabled(false);
+  isBotonApaDisabled(true);
 });
 
-
-/*tituloLibro.addEventListener("blur", validarCampo);
+nombreAutor.addEventListener('blur', validarCampo);
+apellidosAutor.addEventListener('blur', validarCampo)
+tituloLibro.addEventListener("blur", validarCampo);
 lugarLibro.addEventListener("blur", validarCampo);
-anioLibro.addEventListener("blur", validarCampo);*/
+anioLibro.addEventListener("blur", validarCampo);
 
 divFormAutor.addEventListener('click', e => {
 
@@ -29,10 +30,7 @@ divFormAutor.addEventListener('click', e => {
     isInstitucion(e);
   } else if (e.target.classList.contains('borrar-autor')) {
     eliminarAutor(e);
-  } else if (e.target.classList.contains('nombre-autor-input') || e.target.classList.contains('apellido-autor-input') || e.target.classList.contains('institucion')) {
-    // e.target.addEventListener('blur', validarCampo);
-
-  }
+  } 
 });
 btnAgregarAutor.addEventListener('click', agregarAutor);
 
@@ -49,7 +47,6 @@ formGenerarCitaLibro.addEventListener("submit", e => {
   let textoBibliografia = "";
   let textoAutores = "";
   let textoInstituciones = "";
-
 
   if (autores.length > 0) {
     autores.forEach((autor, index) => {
@@ -70,6 +67,7 @@ formGenerarCitaLibro.addEventListener("submit", e => {
     });
     textoInstituciones = `${institucionesArray.map(institucion => { return `${institucion}` }).join(', ')}`;
   }
+
   if(textoInstituciones !== '' && textoAutores !== ''){
     textoBibliografia +=  textoAutores + ", " +  textoInstituciones;
   }else if(textoInstituciones === '') {
@@ -93,22 +91,67 @@ formGenerarCitaLibro.addEventListener("submit", e => {
 
 function validarCampo() {
   validarLongitud(this);
-  if (
-    (nombreAutor.value != "" &&
-      apellidosAutor.value != "") ||
-    tituloLibro.value != "" &&
-    lugarLibro.value != "" &&
-    anioLibro.value != ""
-  ) {
-    isBotonApaDisabled(false);
-  } else {
-    isBotonApaDisabled(true);
+  const autores = document.querySelectorAll('.nombre-autor-input');
+  const apellidosAutores = document.querySelectorAll('.apellido-autor-input');
+  const instituciones = document.querySelectorAll('.institucion');
+  const valoresAutores = Array();
+  const valoresApellidos = Array();
+  const valoresInstituciones = Array();
+  let autoresValor;
+  let institucionesValor;
+  const isEmpty = (valor) => valor === '';
+
+
+  if (autores.length > 0) {
+    autores.forEach((autor,index) => {
+      valoresAutores.push(autor.value);
+      valoresApellidos.push(apellidosAutores[index].value);
+    });
+    autoresValor = !valoresAutores.some(isEmpty) === true && !valoresApellidos.some(isEmpty) === true ? true : false;
   }
+  
+  if (instituciones.length > 0) {
+    instituciones.forEach(institucion => {
+      valoresInstituciones.push(institucion.value);
+    });
+    institucionesValor = !valoresInstituciones.some(isEmpty);
+  }
+  
+  
+
+
+  
+  if (tituloLibro.value != "" && lugarLibro.value != "" && anioLibro.value != ""){
+    if(autoresValor !== undefined && institucionesValor !== undefined){
+      if(autoresValor !== false && institucionesValor !== false){
+        isBotonApaDisabled(false);
+      }else {
+        isBotonApaDisabled(true);
+      }
+    }else if (autoresValor !== undefined) {
+      if (autoresValor !== false) {
+        isBotonApaDisabled(false);
+      }else {
+        isBotonApaDisabled(true);
+      }
+    }else if (institucionesValor !== undefined) {
+      if (institucionesValor !== false) {
+        isBotonApaDisabled(false);
+      }else {
+        isBotonApaDisabled(true);
+      }
+  }
+} else {
+  isBotonApaDisabled(true);
+
+}
 }
 
 function isInstitucion(e) {
   let html = " ";
   if (e.target.checked) {
+    isBotonApaDisabled(true);
+
     html = `                
     <div class="col-10 institucion-input">
       <div class="form-group">
@@ -121,10 +164,14 @@ function isInstitucion(e) {
     const domHmtl = document.createRange().createContextualFragment(html);
     e.target.parentNode.parentNode.parentNode.childNodes[1].children[0].remove();
     e.target.parentNode.parentNode.parentNode.childNodes[1].children[0].remove();
+    domHmtl.childNodes[1].children[0].children[1].addEventListener('blur',validarCampo);
+    
     e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.childNodes[1], e.target.parentNode.parentNode.parentNode.childNodes[1].children[0]);
 
 
   } else {
+    isBotonApaDisabled(true);
+
     html = `
       <div class="col-6 autor-nombre-input">
         <div class="form-group">
@@ -142,10 +189,14 @@ function isInstitucion(e) {
       `;
 
     const domHmtl = document.createRange().createContextualFragment(html);
-    e.target.parentNode.parentNode.parentNode.childNodes[1].children[0].remove();
-    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.childNodes[1], e.target.parentNode.parentNode.parentNode.childNodes[1].children[0]);
-    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.childNodes[2], e.target.parentNode.parentNode.parentNode.childNodes[1].children[1]);
+    e.target.parentNode.parentNode.parentNode.children[0].children[0].remove();
 
+    
+    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.children[0], e.target.parentNode.parentNode.parentNode.children[0].children[0]);    
+    e.target.parentNode.parentNode.previousElementSibling.insertBefore(domHmtl.children[0], e.target.parentNode.parentNode.parentNode.children[0].children[1]);
+    e.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].children[1].addEventListener('blur',validarCampo);
+    e.target.parentNode.parentNode.parentNode.children[0].children[1].children[0].children[1].addEventListener('blur',validarCampo);
+    
 
 
 
@@ -167,10 +218,12 @@ function agregarAutor(e) {
   button.innerText = "X";
   div.classList.add('col-2');
   div.appendChild(button)
-
+  
   autorClone.childNodes[1].insertBefore(div, autorClone.childNodes[1].childNodes[7]);
-
+  
   autores.appendChild(autorClone);
+  autorClone.children[0].children[0].children[0].children[1].addEventListener('blur',validarCampo);
+  if(autorClone.children[0].children.length === 4) autorClone.children[0].children[1].children[0].children[1].addEventListener('blur',validarCampo);
 
 }
 
