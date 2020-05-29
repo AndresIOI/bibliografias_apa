@@ -2,10 +2,9 @@ const formGenerarCitaLibro = document.getElementById("form-libro");
 const nombreAutor = document.querySelector("#nombres-autor");
 const apellidosAutor = document.querySelector("#apellidos-autor");
 const tituloLibro = document.querySelector("#titulo-libro");
-const editorialLibro = document.querySelector("#editorial-libro");
-const lugarLibro = document.querySelector("#lugar-libro");
-const anioLibro = document.querySelector("#anio-libro");
-const edicionLibro = document.querySelector("#edicion-libro");
+const urlLibro = document.querySelector('#url-libro');
+const anioPublicacion = document.querySelector('#anio-publicacion');
+const fechaConsulta = document.querySelector("#fecha-consulta");
 const botonApa = document.querySelector(".btn-apa");
 const botonLimpiar = document.querySelector(".btn-limpiar");
 const divBibliografias = document.querySelector(".bibliografias");
@@ -20,8 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
 nombreAutor.addEventListener('blur', validarCampo);
 apellidosAutor.addEventListener('blur', validarCampo)
 tituloLibro.addEventListener("blur", validarCampo);
-lugarLibro.addEventListener("blur", validarCampo);
-anioLibro.addEventListener("blur", validarCampo);
+urlLibro.addEventListener("blur", validarCampo);
+fechaConsulta.addEventListener("input", validarCampo);
+anioPublicacion.addEventListener("blur", validarCampo);
+
+
 
 divFormAutor.addEventListener('click', e => {
 
@@ -34,7 +36,7 @@ divFormAutor.addEventListener('click', e => {
 });
 btnAgregarAutor.addEventListener('click', agregarAutor);
 
-botonLimpiar.addEventListener('click', limpiarFormulario);
+botonLimpiar.addEventListener('click', limpiarFormularioElec);
 
 formGenerarCitaLibro.addEventListener("submit", e => {
   e.preventDefault();
@@ -47,7 +49,8 @@ formGenerarCitaLibro.addEventListener("submit", e => {
   let textoBibliografia = "";
   let textoAutores = "";
   let textoInstituciones = "";
-
+  const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  
   if (autores.length > 0) {
     autores.forEach((autor, index) => {
       let inicialesNombre = "";
@@ -76,11 +79,11 @@ formGenerarCitaLibro.addEventListener("submit", e => {
     textoBibliografia += textoInstituciones
   }
   
-  textoBibliografia += ` (${anioLibro.value}). `;
-  textoBibliografia += tituloLibro.value;
-  textoBibliografia += edicionLibro.value !== '' ? ` (${edicionLibro.value}ª ed.). ` : ' ';
-  textoBibliografia += lugarLibro.value;
-  textoBibliografia += editorialLibro.value !== '' ? ` : ${editorialLibro.value}` : ' : Autor';
+  textoBibliografia += ` (${anioPublicacion.value}). `;
+  textoBibliografia += `${tituloLibro.value}`;
+
+  textoBibliografia += `. Recuperado el dia ${new Date(fechaConsulta.value).getUTCDate()} de ${meses[Number.parseInt(new Date(fechaConsulta.value).getMonth())]} de ${new Date(fechaConsulta.value).getFullYear()}`;
+  textoBibliografia += ` de ${urlLibro.value}`;
 
   isBibliografia();
   mostrarBibliografia(textoBibliografia);
@@ -121,7 +124,8 @@ function validarCampo() {
 
 
   
-  if (tituloLibro.value != "" && lugarLibro.value != "" && anioLibro.value != ""){
+  if (tituloLibro.value != "" && urlLibro.value != "" && fechaConsulta.value != "" && anioPublicacion.value !== ""){      
+      
     if(autoresValor !== undefined && institucionesValor !== undefined){
       if(autoresValor !== false && institucionesValor !== false){
         isBotonApaDisabled(false);
@@ -145,6 +149,7 @@ function validarCampo() {
   isBotonApaDisabled(true);
 
 }
+
 }
 
 function isInstitucion(e) {
@@ -230,3 +235,45 @@ function agregarAutor(e) {
 function eliminarAutor(e) {
   e.target.parentNode.parentNode.parentNode.remove();
 }
+
+function limpiarFormularioElec(e) {
+  
+    e.preventDefault();
+    formGenerarCitaLibro.reset();
+  
+    const institucion = document.querySelector('.institucion-input');
+
+    if (institucion) {
+      document.querySelector('.form-check-input').checked = true;
+      removerEstilosInput(institucion.children[0].children[1]);    
+    }else{
+      removerEstilosInput(nombreAutor);
+      removerEstilosInput(apellidosAutor);
+    }
+    while (e.target.parentElement.parentElement.parentElement.children[0].children.length > 1) {
+      i = 1;
+      e.target.parentElement.parentElement.parentElement.children[0].children[i].remove();
+      i++;
+    }
+  
+  
+  
+    removerEstilosInput(tituloLibro);
+    removerEstilosInput(urlLibro);
+    removerEstilosInput(anioPublicacion);
+    removerEstilosInput(fechaConsulta);
+
+    removerEstilosInput(botonLimpiar);
+    
+  
+  
+    if (document.querySelector(".bibliografia"))
+      document.querySelector(".bibliografia").remove();
+  
+    if (botonApa.disabled === false) {
+      botonApa.disabled = true;
+      botonApa.classList.add("btn-disabled");
+    }
+  }
+
+
